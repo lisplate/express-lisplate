@@ -1,0 +1,12 @@
+{
+  "name": "express-lisplate-example",
+  "version": "0.1.0",
+  "description": "Simple example using express-lisplate",
+  "main": "index.js",
+  "author": "Matthew Hall <mdhall@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.14.0",
+    "lisplate": "~0.4.1"
+  }
+}

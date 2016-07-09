@@ -1,0 +1,23 @@
+{
+  "name": "express-lisplate",
+  "version": "0.1.0",
+  "description": "LisplateJS bindings for Express render",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lisplate/express-lisplate.git"
+  },
+  "author": "Matthew Hall <mdhall@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lisplate/express-lisplate/issues"
+  },
+  "homepage": "https://github.com/lisplate/express-lisplate",
+  "peerDependencies": {
+    "express" : "~4.11.0",
+    "lisplate": "~0.4.1"
+  }
+}
