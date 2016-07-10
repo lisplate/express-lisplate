@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 
 var Lisplate = require('lisplate');
-// var engine = null;
+var cache = {};
 
 var engineOptions = {};
 
@@ -107,7 +107,20 @@ function render(filepath, options, done) {
     stringsDirectory: engineOptions.stringsDirectory
   }, options);
 
-  engine.renderTemplate(templateName, options, done);
+  var toRender = templateName;
+  if (cache[templateName]) {
+    toRender = {templateName: templateName, renderFactory: cache[templateName]};
+  }
+
+  engine.renderTemplate(toRender, options, function(err, out) {
+    if (err) {
+      done(err);
+      return;
+    }
+
+    cache[templateName] = engine.cache[templateName];
+    done(null, out);
+  });
 }
 
 module.exports = function(options) {
