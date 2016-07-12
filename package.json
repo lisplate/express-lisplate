@@ -1,6 +1,6 @@
 {
   "name": "express-lisplate",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "LisplateJS bindings for Express render",
   "main": "index.js",
   "directories": {

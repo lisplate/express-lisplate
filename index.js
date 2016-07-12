@@ -109,7 +109,7 @@ function render(filepath, options, done) {
     stringsDirectory: engineOptions.stringsDirectory
   }, options);
 
-  engine.renderTemplate(toRender, options, done);
+  engine.renderTemplate(templateName, options, done);
 }
 
 module.exports = function(options) {
