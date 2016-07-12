@@ -16,7 +16,7 @@ function tryLoadingStrings(stringsPath, langs, done) {
   fs.readFile(filepath, 'utf-8', function(err, json) {
     if (err) {
       if (langs) {
-        tryLoadingStrings(stringsPath, langs, done);
+        tryLoadingStrings(stringsPath, langs.length ? langs : null, done);
       } else {
         done();
       }
@@ -31,7 +31,7 @@ function makeEngine(options, data) {
   var viewModelLoader = null;
   var stringsLoader = null;
 
-  if (options.viewModelDirectory) {
+  if (options.viewModelDirectory != null) {
     if (typeof options.viewModelDirectory === 'function') {
       viewModelLoader = options.viewModelDirectory;
     } else {
@@ -49,13 +49,13 @@ function makeEngine(options, data) {
     }
   }
 
-  if (options.stringsDirectory) {
+  if (options.stringsDirectory != null) {
     if (typeof options.stringsDirectory === 'function') {
       stringsLoader = options.stringsDirectory;
     } else {
       stringsLoader = function(templatePath, callback) {
         var filepath = path.resolve(options.stringsDirectory, templatePath);
-        tryLoadingStrings(filepath, data._locals.$_langs, callback);
+        tryLoadingStrings(filepath, data._locals.$_langs.slice(), callback);
       };
     }
   }
@@ -125,12 +125,8 @@ function render(filepath, options, done) {
 
 module.exports = function(options) {
   if (options) {
-    if (options.viewModelDirectory) {
-      engineOptions.viewModelDirectory = options.viewModelDirectory;
-    }
-    if (options.stringsDirectory) {
-      engineOptions.stringsDirectory = options.stringsDirectory;
-    }
+    engineOptions.viewModelDirectory = options.viewModelDirectory;
+    engineOptions.stringsDirectory = options.stringsDirectory;
   }
 
   return render;
