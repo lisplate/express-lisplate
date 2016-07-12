@@ -2,7 +2,6 @@ var fs = require('fs');
 var path = require('path');
 
 var Lisplate = require('lisplate');
-var cache = {};
 
 var engineOptions = {};
 
@@ -74,13 +73,15 @@ function makeEngine(options, data) {
     },
 
     viewModelLoader: viewModelLoader,
-    stringsLoader: stringsLoader
+    stringsLoader: stringsLoader,
+    cacheEnabled: options.shouldCache
   });
 }
 
 function render(filepath, options, done) {
   var ext = 'ltml';
   var viewDirectory = '.';
+  var shouldCache = false;
 
   var templateName = (this ? this.name : null) || filepath;
 
@@ -95,32 +96,20 @@ function render(filepath, options, done) {
       viewDirectory = options.settings.views;
     }
 
-    // if (options.cache === false) {
-    //   engine.cache = {};
-    // }
+    if (options.cache === true) {
+      shouldCache = true;
+    }
   }
 
   var engine = makeEngine({
     ext: ext,
+    shouldCache: shouldCache,
     viewDirectory: viewDirectory,
     viewModelDirectory: engineOptions.viewModelDirectory,
     stringsDirectory: engineOptions.stringsDirectory
   }, options);
 
-  var toRender = templateName;
-  if (cache[templateName]) {
-    toRender = {templateName: templateName, renderFactory: cache[templateName]};
-  }
-
-  engine.renderTemplate(toRender, options, function(err, out) {
-    if (err) {
-      done(err);
-      return;
-    }
-
-    cache[templateName] = engine.cache[templateName];
-    done(null, out);
-  });
+  engine.renderTemplate(toRender, options, done);
 }
 
 module.exports = function(options) {
