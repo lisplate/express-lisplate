@@ -52,9 +52,9 @@ function makeEngine(options, data) {
     if (typeof options.stringsDirectory === 'function') {
       stringsLoader = options.stringsDirectory;
     } else {
-      stringsLoader = function(templatePath, callback) {
+      stringsLoader = function(templatePath, renderContext, callback) {
         var filepath = path.resolve(options.stringsDirectory, templatePath);
-        tryLoadingStrings(filepath, data._locals.$_langs.slice(), callback);
+        tryLoadingStrings(filepath, renderContext.languages.slice(), callback);
       };
     }
   }
@@ -101,6 +101,8 @@ function render(filepath, options, done) {
     }
   }
 
+console.log(options.$_renderContext);
+
   var engine = makeEngine({
     ext: ext,
     shouldCache: shouldCache,
@@ -109,7 +111,7 @@ function render(filepath, options, done) {
     stringsDirectory: engineOptions.stringsDirectory
   }, options);
 
-  engine.renderTemplate(templateName, options, done);
+  engine.renderTemplate(templateName, options, options.$_renderContext, done);
 }
 
 module.exports = function(options) {
@@ -146,6 +148,10 @@ module.exports.localizationInit = function(req, res, next) {
   }
 
   req.langs = languages;
-  res.locals.$_langs = languages;
+
+  if (!res.locals.$_renderContext) {
+    res.locals.$_renderContext = {};
+  }
+  res.locals.$_renderContext.languages = languages;
   next();
 };
