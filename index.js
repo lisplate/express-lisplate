@@ -101,8 +101,6 @@ function render(filepath, options, done) {
     }
   }
 
-console.log(options.$_renderContext);
-
   var engine = makeEngine({
     ext: ext,
     shouldCache: shouldCache,
